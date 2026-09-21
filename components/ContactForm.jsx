@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState(null);
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
     if (document.querySelector('script[src*="recaptcha/api.js"]')) return;
@@ -16,13 +16,13 @@ export default function ContactForm() {
   }, []);
   //   const recaptchaRef = useRef();
 
-  const showToast = (msg) => {
-    setToast(msg);
-    setTimeout(() => setToast(null), 3000);
+  const showStatus = (msg, type = "error") => {
+    setStatus({ msg, type });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setStatus(null);
 
     // const token = recaptchaRef.current.getValue();
 
@@ -34,7 +34,7 @@ export default function ContactForm() {
     setLoading(true);
 
     if (typeof window === "undefined" || !window.grecaptcha) {
-      showToast("reCAPTCHA not loaded yet, please try again");
+      showStatus("reCAPTCHA not loaded yet, please try again");
       setLoading(false);
       return;
     }
@@ -56,7 +56,7 @@ export default function ContactForm() {
       });
     } catch (err) {
       console.error("reCAPTCHA error:", err);
-      showToast("reCAPTCHA verification failed");
+      showStatus("reCAPTCHA verification failed");
       setLoading(false);
       return;
     }
@@ -83,15 +83,15 @@ export default function ContactForm() {
       const data = await res.json();
 
       if (data.success) {
-        showToast("Message sent successfully!");
+        showStatus("Message sent successfully! We'll get back to you shortly.", "success");
         e.target.reset();
         // recaptchaRef.current.reset();
       } else {
-        showToast("Something went wrong");
+        showStatus("Something went wrong, please try again");
       }
     } catch (err) {
       console.error(err);
-      showToast("Error submitting form");
+      showStatus("Error submitting form, please try again");
     }
 
     setLoading(false);
@@ -138,14 +138,31 @@ export default function ContactForm() {
             <>Send Message →</>
           )}
         </button>
-      </form>
 
-      {/* ✅ Toast */}
-      {toast && (
-        <div className="fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-lg shadow-lg">
-          {toast}
-        </div>
-      )}
+        {status && (
+          <div
+            role={status.type === "success" ? "status" : "alert"}
+            aria-live={status.type === "success" ? "polite" : "assertive"}
+            className={`flex items-center gap-3 text-[15px] font-medium ${
+              status.type === "success"
+                ? "text-[#5c296c]/60"
+                : "px-4 py-3 border border-solid border-[#B3261E] bg-[#B3261E]/10 text-[#8C1D18]"
+            }`}
+          >
+            {status.type === "success" ? (
+              <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v6M12 16.5v.5" />
+              </svg>
+            )}
+            <span>{status.msg}</span>
+          </div>
+        )}
+      </form>
     </>
   );
 }

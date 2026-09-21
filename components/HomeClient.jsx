@@ -247,7 +247,9 @@ export default function HomeClient({ bannerData }) {
               preload="none"
               style={{ width: '35%', left: '32.5%', height: '65%', top: '37%' }}
             >
-              <source src={bannerData.acf.section_2_fields.background_video.url} type="video/mp4" />
+              {bannerData?.acf?.section_2_fields?.background_video?.url && (
+                <source src={bannerData.acf.section_2_fields.background_video.url} type="video/mp4" />
+              )}
             </video>
             <div className="s-3-video-overlay absolute inset-0 h-full w-full object-cover bg-[#0A388D] opacity-0 z-2 mix-blend-screen"></div>
             <div className="pt-[93px] z-5 relative">

@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react'
 import FaqAccordionList from './FaqAccordionList'
 
 export default function GetInTouch({ data, faqLimit, faqViewAllHref }) {
-  if (!data) return null
   const [loading, setLoading] = useState(false)
-  const [toast, setToast] = useState(null);
+  const [toast, setToast] = useState(null)
+  const [sent, setSent] = useState(false)
 
   useEffect(() => {
     if (document.querySelector('script[src*="recaptcha/api.js"]')) return;
@@ -15,13 +15,15 @@ export default function GetInTouch({ data, faqLimit, faqViewAllHref }) {
     document.body.appendChild(script);
   }, []);
 
+  if (!data) return null
+
   const showToast = (msg) => {
     setToast(msg)
-    setTimeout(() => setToast(null), 3000)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setToast(null)
     setLoading(true);
 
     if (typeof window === "undefined" || !window.grecaptcha) {
@@ -70,14 +72,14 @@ export default function GetInTouch({ data, faqLimit, faqViewAllHref }) {
       const dataResp = await res.json()
 
       if (dataResp.success) {
-        showToast('Message sent successfully!')
         e.target.reset()
+        setSent(true)
       } else {
-        showToast('Something went wrong')
+        showToast('Something went wrong, please try again')
       }
     } catch (err) {
       console.error(err)
-      showToast('Error submitting form')
+      showToast('Error submitting form, please try again')
     }
 
     setLoading(false)
@@ -94,27 +96,72 @@ export default function GetInTouch({ data, faqLimit, faqViewAllHref }) {
               <h3 className="text-[38px] md:text-[58px] text-black font-medium leading-tight tracking-0">{data.heading_2}</h3>
             </div>
           </div>
-          <div className="flex flex-col w-full gap-5">
-            <input type="text" name="name" placeholder="Name" autoComplete="off" className="bg-transparent border-[#8EA7C4] px-6 py-5 text-[16px] text-[#5C296C] font-semibold border border-solid" required />
-            <input type="text" name="phone" placeholder="Phone" autoComplete="off" className="bg-transparent border-[#8EA7C4] px-6 py-5 text-[16px] text-[#5C296C] font-semibold border border-solid" />
-            <input type="email" name="email" placeholder="Email" autoComplete="off" className="bg-transparent border-[#8EA7C4] px-6 py-5 text-[16px] text-[#5C296C] font-semibold border border-solid" required />
-            <textarea name="message" rows="4" placeholder="Message" autoComplete="off" className="bg-transparent min-h-[100px] xl:min-h-[188px] border-[#8EA7C4] text-[#5C296C] px-6 py-5 text-[16px] font-semibold border border-solid" required></textarea>
-          </div>
-          <div>
-            <button type='submit' disabled={loading} className="ip-btn ip-btn-primary w-fit mt-3">
-              {loading ? (
-                <>
-                  <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
-                  Sending...
-                </>
-              ) : (
-                <>
-                  {data.form_button_text}
-                  <span>→</span>
-                </>
+
+          {sent ? (
+            <div
+              role="status"
+              aria-live="polite"
+              className="w-full flex flex-col items-start gap-4 text-[#5c296c]/60"
+            >
+              <span className="w-14 h-14 rounded-full border border-solid border-current flex items-center justify-center">
+                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+              <h4 className="text-[26px] md:text-[32px] font-semibold leading-tight">
+                Message sent
+              </h4>
+              <p className="text-[16px] md:text-[18px]">
+                Thanks for reaching out — we&apos;ve received your message and a member of our team
+                will get back to you shortly.
+              </p>
+              <button
+                type="button"
+                onClick={() => setSent(false)}
+                className="ip-btn ip-btn-outline w-fit mt-2"
+              >
+                Send another message <span>→</span>
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col w-full gap-5">
+                <input type="text" name="name" placeholder="Name" autoComplete="off" className="bg-transparent border-[#8EA7C4] px-6 py-5 text-[16px] text-[#5C296C] font-semibold border border-solid" required />
+                <input type="text" name="phone" placeholder="Phone" autoComplete="off" className="bg-transparent border-[#8EA7C4] px-6 py-5 text-[16px] text-[#5C296C] font-semibold border border-solid" />
+                <input type="email" name="email" placeholder="Email" autoComplete="off" className="bg-transparent border-[#8EA7C4] px-6 py-5 text-[16px] text-[#5C296C] font-semibold border border-solid" required />
+                <textarea name="message" rows="4" placeholder="Message" autoComplete="off" className="bg-transparent min-h-[100px] xl:min-h-[188px] border-[#8EA7C4] text-[#5C296C] px-6 py-5 text-[16px] font-semibold border border-solid" required></textarea>
+              </div>
+              <div>
+                <button type='submit' disabled={loading} className="ip-btn ip-btn-primary w-fit mt-3">
+                  {loading ? (
+                    <>
+                      <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Submit
+                      <span>→</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {toast && (
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="w-full flex items-center gap-3 px-4 py-3 border border-solid border-[#B3261E] bg-[#B3261E]/10 text-[#8C1D18] text-[15px] font-medium"
+                >
+                  <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v6M12 16.5v.5" />
+                  </svg>
+                  <span>{toast}</span>
+                </div>
               )}
-            </button>
-          </div>
+            </>
+          )}
         </form>
         <div className="w-full flex flex-col gap-8">
           <div>
@@ -126,11 +173,6 @@ export default function GetInTouch({ data, faqLimit, faqViewAllHref }) {
           />
         </div>
       </div>
-      {toast && (
-        <div className="fixed bottom-5 right-5 bg-black text-white px-4 py-2 rounded-lg shadow-lg">
-          {toast}
-        </div>
-      )}
     </div>
   )
 }
