@@ -118,7 +118,7 @@ export default function GetInTouch({ data, faqLimit, faqViewAllHref }) {
               <button
                 type="button"
                 onClick={() => setSent(false)}
-                className="ip-btn ip-btn-outline w-fit mt-2"
+                className="ip-btn ip-btn-outline-blue w-fit mt-2"
               >
                 Send another message <span>→</span>
               </button>
