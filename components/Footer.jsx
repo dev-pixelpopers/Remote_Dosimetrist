@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { IconLinkedin, IconFacebook, IconYoutube, IconTwitter } from '@/components/SiteIcons'
+import { IconLinkedin, IconFacebook, IconInstagram, IconTwitter } from '@/components/SiteIcons'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -24,10 +24,9 @@ export default function Footer() {
               </Link>
             </div>
             <div className="flex space-x-8 mt-6">
-              <a href="#" aria-label="LinkedIn" className="text-[#003777] hover:text-blue-800 inline-flex"><IconLinkedin className="h-4.75 w-auto" /></a>
-              <a href="#" aria-label="Facebook" className="text-[#003777] hover:text-blue-800 inline-flex"><IconFacebook className="h-4.75 w-auto" /></a>
-              <a href="#" aria-label="YouTube" className="text-[#003777] hover:text-blue-800 inline-flex"><IconYoutube className="h-4.75 w-auto" /></a>
-              <a href="#" aria-label="Twitter" className="text-[#003777] hover:text-blue-800 inline-flex"><IconTwitter className="h-4.75 w-auto" /></a>
+
+              <a href="https://www.facebook.com/remotedosimetry.services" aria-label="Facebook" className="text-[#003777] hover:text-blue-800 inline-flex"><IconFacebook className="h-4.75 w-auto" /></a>
+              <a href="https://www.instagram.com/remote_dosimetry" aria-label="Instagram" className="text-[#003777] hover:text-blue-800 inline-flex"><IconInstagram className="h-4.75 w-auto" /></a>
             </div>
           </div>
 
