@@ -74,7 +74,7 @@ export default function Header() {
             <Link href="/contact" className={`${animatedUnderlineClass} hover:text-[#003777] text-gray-800 font-bold text-md transition-colors capitalize`}>Contact Us</Link>
           </nav>
           <a
-            href="#get-in-touch"
+            href="/#get-in-touch"
             className="bg-gray-800 text-white! px-5 py-2 rounded-full shadow-lg hover:bg-gray-700 transition-colors text-sm font-medium"
           >
             GET IN TOUCH
@@ -135,7 +135,7 @@ export default function Header() {
 
         <div className="px-8 mt-8">
           <a
-            href="#get-in-touch"
+            href="/#get-in-touch"
             onClick={() => setMenuOpen(false)}
             className="block text-center bg-gray-800 text-white px-5 py-4 rounded-full shadow-lg hover:bg-gray-700 transition-colors text-sm font-medium uppercase tracking-widest"
           >

@@ -4,6 +4,7 @@ import Preloader from '@/components/Preloader'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import DeferredPopup from '@/components/DeferredPopup'
+import HashScrollAnchor from '@/components/HashScrollAnchor'
 import Script from "next/script";
 import { Montserrat } from 'next/font/google'
 
@@ -78,6 +79,7 @@ export default function RootLayout({ children }) {
           <Preloader />
           <Header />
           <DeferredPopup />
+          <HashScrollAnchor />
           {children}
           <Footer />
         </PreloaderProvider>

@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 // import { usePreloader } from './PreloaderContext'
 
+const POPUP_SEEN_KEY = "popupSeen";
+
 export default function Popup() {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
@@ -11,8 +13,18 @@ export default function Popup() {
     // const { alreadyShown } = usePreloader();
 
     useEffect(() => {
-        const alreadyClosed = localStorage.getItem("popupClosed");
-        if (alreadyClosed || pathname === "/contact") return;
+        let alreadySeen = false;
+        try {
+            alreadySeen = sessionStorage.getItem(POPUP_SEEN_KEY) === "true";
+        } catch (e) {
+            // Private mode / storage blocked: fall through and show the popup.
+        }
+
+        // Don't interrupt someone who deep-linked straight to a section
+        // (e.g. "/#get-in-touch" from an inner page) — they came here to act.
+        const arrivedViaHash = window.location.hash.length > 1;
+
+        if (alreadySeen || arrivedViaHash || pathname === "/contact") return;
 
         timerTriggeredRef.current = false;
         let rafId = null;
@@ -46,8 +58,13 @@ export default function Popup() {
     }, [pathname]);
 
     const closePopup = () => {
+        try {
+            sessionStorage.setItem(POPUP_SEEN_KEY, "true");
+        } catch (e) {
+            // Storage blocked: the popup simply shows again next visit.
+        }
         setIsOpen(false);
-        // document.body.style.overflow = "auto"; // enable scroll
+        document.body.style.overflow = "auto"; // enable scroll
     };
 
     if (!isOpen) return null;
@@ -78,12 +95,7 @@ export default function Popup() {
                     </p>
                     <div className="flex flex-col lg:flex-row gap-2 justify-center items-center">
                         <a href="/contact" className="ip-btn ip-btn-primary gap-[3px]! ">Get In Touch <span>→</span></a>
-                        <button className="ip-btn ip-btn-primary"
-                            onClick={() => {
-                                localStorage.setItem("popupClosed", "true");
-                                setIsOpen(false);
-                                document.body.style.overflow = "auto";
-                            }}>
+                        <button className="ip-btn ip-btn-primary" onClick={closePopup}>
                             Not! Just Yet.
                         </button>
                     </div>
