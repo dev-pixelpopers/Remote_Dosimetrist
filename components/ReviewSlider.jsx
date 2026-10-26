@@ -9,39 +9,38 @@ const reviews = [
     rating: 5,
     text: 'Working for a busy radiation oncology department, it became quite difficult to manage the workload when a staff member decided to move onto a new venture. We needed help with the spikes we had in planning but really didn\'t need someone full time.',
     name: 'Richard K, CMD (Auburn, WA)',
-    image: '/assets/review-img.png',
   },
   {
     rating: 4,
     text: 'Nathan is an honest and dependable Dosimetrist. He filled in for our Varian platform clinic when we were overwhelmed by the high volume of patients. Nathan is pleasant to work with and easily accommodated the way our clinic provides dosimetry to our community.',
     name: 'Monique W, CMD (Tacoma, WA)',
-    image: '/assets/review-img.png',
   },
   {
     rating: 5,
     text: 'Nathan is very professional and a proficient medical dosimetrist. Nathan is very easy to work with. I would definitely use his expertise again! Thank you Nathan!',
     name: 'Janine M, RTT, Lead Therapist (Spokane, WA)',
-    image: '/assets/review-img.png',
   },
   {
     rating: 5,
     text: 'Working for a busy radiation oncology department, it became quite difficult to manage the workload when a staff member decided to move onto a new venture. We needed help with the spikes we had in planning but really didn\'t need someone full time.',
     name: 'Richard K, CMD (Auburn, WA)',
-    image: '/assets/review-img.png',
   },
   {
     rating: 4,
     text: 'Nathan is an honest and dependable Dosimetrist. He filled in for our Varian platform clinic when we were overwhelmed by the high volume of patients. Nathan is pleasant to work with and easily accommodated the way our clinic provides dosimetry to our community.',
     name: 'Monique W, CMD (Tacoma, WA)',
-    image: '/assets/review-img.png',
   },
   {
     rating: 5,
     text: 'Nathan is very professional and a proficient medical dosimetrist. Nathan is very easy to work with. I would definitely use his expertise again! Thank you Nathan!',
     name: 'Janine M, RTT, Lead Therapist (Spokane, WA)',
-    image: '/assets/review-img.png',
   },
 ]
+
+function getInitial(name) {
+  const match = (name || '').match(/[a-z]/i)
+  return match ? match[0].toUpperCase() : ''
+}
 
 function ReviewCard({ review }) {
   const { isActive } = useSwiperSlide()
@@ -50,7 +49,12 @@ function ReviewCard({ review }) {
     <div className="review-main h-full p-6 transition-all duration-300 flex flex-col gap-10">
       <div className="flex flex-col">
         <div className="self-end">
-          <img loading='lazy' src={review.image} alt={review.name} className="w-[96px] h-[96px] rounded-full object-cover" />
+          <div
+            className="review-avatar w-[96px] h-[96px] rounded-full flex items-center justify-center select-none"
+            aria-hidden="true"
+          >
+            <span className="text-[40px] font-semibold leading-none">{getInitial(review.name)}</span>
+          </div>
         </div>
         <div className="flex gap-2 text-lg">
           {Array.from({ length: review.rating }).map((_, i) => (

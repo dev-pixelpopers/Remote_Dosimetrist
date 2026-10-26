@@ -226,6 +226,17 @@ button:focus-visible {
   fill: #fff;
 }
 
+/* Initial-letter avatar: mirrors the star colors so it flips on the active slide */
+.review-avatar {
+  background-color: #5c296c;
+  color: #fff;
+}
+
+.swiper-slide-active .review-avatar {
+  background-color: #fff;
+  color: #003777;
+}
+
 .review-slider .swiper-slide-active {
   background-color: #003777;
   padding-top: 46.34px;
